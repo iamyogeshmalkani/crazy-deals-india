@@ -225,6 +225,10 @@ class Repo:
         )
         return int(rows[0]["n"])
 
+    def last_post_time(self) -> Optional[int]:
+        rows = self.db.query("SELECT MAX(posted_at) AS t FROM deals")
+        return int(rows[0]["t"]) if rows and rows[0]["t"] is not None else None
+
     def mark_stale(self, older_than_ts: int) -> int:
         """Pending/approved deals that never got posted in time are dropped."""
         rows = self.db.query(

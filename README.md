@@ -9,10 +9,10 @@ your affiliate links. Phase 0 + 1 of [PLAN.md](PLAN.md).
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt pytest
 PYTHONPATH=src .venv/bin/python -m dealbot demo   # full flow on sample data, prints the messages
-.venv/bin/python -m pytest                        # 63 tests
+.venv/bin/python -m pytest                        # 65 tests
 ```
 
-## How a run works (every 15 min via GitHub Actions)
+## How a run works (every 5 min via GitHub Actions)
 
 1. **Review taps**: reads Approve/Reject taps from the review chat (only `TELEGRAM_REVIEWER_IDS` count).
 2. **Collect**: Flipkart Offers API, RSS feeds, and `MANUAL_DEALS_FILE`.
@@ -53,7 +53,7 @@ bank: Extra 1500 off with HDFC cards
 ends: 2026-10-28 23:59
 ```
 
-The bot checks it against recorded prices, rebuilds the link with your tag, and sends a review card to approve or reject. If it declines a deal it says why, and it still records the price, so repeat sightings build the history that makes later deals verifiable. Replies arrive on the next 15-minute run. Send `/help` for the format.
+The bot checks it against recorded prices, rebuilds the link with your tag, and sends a review card to approve or reject. If it declines a deal it says why, and it still records the price, so repeat sightings build the history that makes later deals verifiable. Replies arrive on the next run (every 5 minutes, often slower). Send `/help` for the format.
 
 You can also keep a JSON file of deals in the repo: point `MANUAL_DEALS_FILE` at a file in the format of `data/sample_deals.json`.
 

@@ -28,6 +28,9 @@ from dealbot.telegram import Telegram, TelegramError
 log = logging.getLogger("dealbot")
 
 OFFSET_KEY = "tg_update_offset"
+# GitHub cron runs drift by seconds to minutes; allow this much early so a run that
+# fires slightly before the interval has elapsed is not pushed back a whole cycle.
+INTERVAL_SLACK_SECONDS = 60
 
 
 @dataclass
@@ -230,6 +233,12 @@ class Pipeline:
             return 0
         room_today = self.cfg.max_posts_per_day - self.repo.posted_count_since(ist_day_start(now))
         budget = min(self.cfg.max_posts_per_run, room_today)
+        if self.cfg.post_interval_minutes:
+            last = self.repo.last_post_time()
+            wait = self.cfg.post_interval_minutes * 60 - INTERVAL_SLACK_SECONDS
+            if last is not None and now - last < wait:
+                return 0
+            budget = min(budget, 1)  # drip: one post per interval
         posted = 0
         for deal in self.repo.deals_by_status(STATUS_APPROVED):
             if posted >= budget:

@@ -53,6 +53,7 @@ class Config:
     auto_approve_score: int = 101
     max_posts_per_day: int = 30
     max_posts_per_run: int = 4
+    post_interval_minutes: int = 0  # 0 = no spacing; N = at most one post every N minutes
     max_review_cards_per_run: int = 8
     review_ttl_hours: int = 8
     quiet_start_hour: int = 0
@@ -91,6 +92,7 @@ class Config:
             auto_approve_score=_int(env, "AUTO_APPROVE_SCORE", 101),
             max_posts_per_day=_int(env, "MAX_POSTS_PER_DAY", 30),
             max_posts_per_run=_int(env, "MAX_POSTS_PER_RUN", 4),
+            post_interval_minutes=_int(env, "POST_INTERVAL_MINUTES", 0),
             max_review_cards_per_run=_int(env, "MAX_REVIEW_CARDS_PER_RUN", 8),
             review_ttl_hours=_int(env, "REVIEW_TTL_HOURS", 8),
             quiet_start_hour=_int(env, "QUIET_START_HOUR", 0),

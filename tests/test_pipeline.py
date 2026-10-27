@@ -177,3 +177,33 @@ def test_price_history_is_not_bloated(cfg, repo):
     assert repo.record_price(pid, 95, None, NOW + 1800)  # changed
     assert repo.record_price(pid, 95, None, NOW + 1800 + 7 * 3600)  # unchanged but old row
     assert len(repo.price_history(pid, NOW + DAY)) == 3
+
+
+def test_drip_posts_one_deal_per_interval(cfg, repo, tg):
+    cfg.post_interval_minutes = 5
+    raws = [good_deal(repo, store_product_id=f"B0TEST000{i}", url=f"https://www.amazon.in/dp/B0TEST000{i}")
+            for i in range(3)]
+    pipe = Pipeline(cfg, repo, tg, [Source(*raws)], clock=lambda: NOW)
+    pipe.run()
+    for d in repo.deals_by_status("pending_review"):
+        repo.update_deal(d["id"], status=STATUS_APPROVED)
+
+    assert pipe.run()["posted"] == 1  # first one goes straight out
+    pipe.clock = lambda: NOW + 60
+    assert pipe.run()["posted"] == 0  # too soon
+    pipe.clock = lambda: NOW + 250  # cron fired a little early: within the 60s slack
+    assert pipe.run()["posted"] == 1
+    pipe.clock = lambda: NOW + 250 + 299
+    assert pipe.run()["posted"] == 1  # slack again, and the third deal goes out
+    assert len(sent(tg, "@chan")) == 3
+
+
+def test_without_an_interval_all_approved_deals_post_up_to_the_run_cap(cfg, repo, tg):
+    cfg.max_posts_per_run = 2
+    raws = [good_deal(repo, store_product_id=f"B0TEST000{i}", url=f"https://www.amazon.in/dp/B0TEST000{i}")
+            for i in range(3)]
+    pipe = Pipeline(cfg, repo, tg, [Source(*raws)], clock=lambda: NOW)
+    pipe.run()
+    for d in repo.deals_by_status("pending_review"):
+        repo.update_deal(d["id"], status=STATUS_APPROVED)
+    assert pipe.run()["posted"] == 2

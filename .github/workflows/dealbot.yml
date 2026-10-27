@@ -2,7 +2,7 @@ name: dealbot
 
 on:
   schedule:
-    - cron: "*/15 * * * *" # GitHub may delay scheduled runs by several minutes
+    - cron: "*/5 * * * *" # 5 minutes is GitHub's minimum; it often delays runs by several minutes
   workflow_dispatch:
 
 # Only one run at a time: the Telegram update offset and review state are not safe to race.
@@ -47,3 +47,5 @@ jobs:
           MANUAL_DEALS_FILE: ${{ vars.MANUAL_DEALS_FILE }}
           MSG_LANG: ${{ vars.MSG_LANG || 'hi' }}
           DRY_RUN: ${{ vars.DRY_RUN || '0' }}
+          POST_INTERVAL_MINUTES: ${{ vars.POST_INTERVAL_MINUTES }}
+          MAX_POSTS_PER_DAY: ${{ vars.MAX_POSTS_PER_DAY }}
