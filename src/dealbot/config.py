@@ -87,6 +87,7 @@ class Config:
             manual_deals_file=env.get("MANUAL_DEALS_FILE", "").strip(),
             lang=env.get("MSG_LANG", "hi").strip() or "hi",
             min_score=_int(env, "MIN_SCORE", 30),
+            min_unverified_discount=_int(env, "MIN_UNVERIFIED_DISCOUNT", 35),
             auto_approve_score=_int(env, "AUTO_APPROVE_SCORE", 101),
             max_posts_per_day=_int(env, "MAX_POSTS_PER_DAY", 30),
             max_posts_per_run=_int(env, "MAX_POSTS_PER_RUN", 4),

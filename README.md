@@ -9,7 +9,7 @@ your affiliate links. Phase 0 + 1 of [PLAN.md](PLAN.md).
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt pytest
 PYTHONPATH=src .venv/bin/python -m dealbot demo   # full flow on sample data, prints the messages
-.venv/bin/python -m pytest                        # 45 tests
+.venv/bin/python -m pytest                        # 63 tests
 ```
 
 ## How a run works (every 15 min via GitHub Actions)
@@ -42,9 +42,20 @@ PYTHONPATH=src .venv/bin/python -m dealbot demo   # full flow on sample data, pr
 
 Before posting for real, pin a channel message with your affiliate disclosure and read the Amazon Associates operating agreement (price display rules, link rules).
 
-## Hand-picked deals (works before any API is approved)
+## Adding Amazon deals by chat (works before any API is approved)
 
-Point `MANUAL_DEALS_FILE` at a JSON file in the format of `data/sample_deals.json` (url, price, mrp, optional coupon/bank_offer/expiry). Items run through the same history, scoring, review, and tagging.
+Message the bot privately (only `TELEGRAM_REVIEWER_IDS` are answered) with the Amazon.in link, the price you see now, and optionally the MRP:
+
+```
+https://www.amazon.in/Product-Name/dp/B0XXXXXXXX 14999 24999
+coupon: SAVE100
+bank: Extra 1500 off with HDFC cards
+ends: 2026-10-28 23:59
+```
+
+The bot checks it against recorded prices, rebuilds the link with your tag, and sends a review card to approve or reject. If it declines a deal it says why, and it still records the price, so repeat sightings build the history that makes later deals verifiable. Replies arrive on the next 15-minute run. Send `/help` for the format.
+
+You can also keep a JSON file of deals in the repo: point `MANUAL_DEALS_FILE` at a file in the format of `data/sample_deals.json`.
 
 ## Known limits
 

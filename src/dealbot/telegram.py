@@ -122,4 +122,4 @@ class Telegram:
             updates, self.queued_updates = self.queued_updates, []
             return [u for u in updates if u["update_id"] >= offset]
         return self.call("getUpdates", {"offset": offset, "timeout": 0,
-                                        "allowed_updates": ["callback_query"]})
+                                        "allowed_updates": ["callback_query", "message"]})
