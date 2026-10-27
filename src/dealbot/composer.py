@@ -17,6 +17,9 @@ from dealbot.models import KIND_OFFER, RawDeal, Verdict
 
 URGENCY_WINDOW = 48 * 3600  # only mention an expiry that is within two days
 
+# Required on Amazon Associates properties; shown on every post that links to Amazon.
+AMAZON_ASSOCIATE_STATEMENT = "As an Amazon Associate I earn from qualifying purchases."
+
 
 @dataclass
 class Composed:
@@ -164,8 +167,11 @@ def compose(raw: RawDeal, verdict: Verdict, link: str, lang: str, now: int) -> C
 
     lines.append("")
     lines.append(f'🛒 <a href="{safe_link}">{t["buy_link"]}</a>')
+    disclosure = t["disclosure"]
+    if raw.store == "amazon":
+        disclosure = f"{disclosure} {AMAZON_ASSOCIATE_STATEMENT}"
     lines.append("")
-    lines.append(f"<i>{t['disclosure']}</i>")
+    lines.append(f"<i>{disclosure}</i>")
     channel_text = "\n".join(lines)
 
     status = "verified ✅" if verdict.verified else "unverified ⚠️ (no price history)"

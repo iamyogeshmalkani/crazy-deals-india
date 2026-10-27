@@ -43,6 +43,13 @@ def test_every_post_carries_disclosure_and_the_tagged_link():
         assert "Affiliate link" in text and LINK in text
 
 
+def test_amazon_posts_carry_the_associate_statement_and_others_do_not():
+    amazon = compose(make_raw(), verified(), LINK, "hi", NOW).channel_text
+    assert "As an Amazon Associate I earn from qualifying purchases." in amazon
+    flipkart = compose(make_raw(store="flipkart"), verified(), LINK, "hi", NOW).channel_text
+    assert "Amazon Associate" not in flipkart
+
+
 def test_titles_are_html_escaped():
     text = compose(make_raw(title="A <b>&</b> B"), verified(), LINK, "en", NOW).channel_text
     assert "A &lt;b&gt;&amp;&lt;/b&gt; B" in text
