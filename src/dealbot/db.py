@@ -120,6 +120,11 @@ class Repo:
     def init(self) -> None:
         for statement in _schema(self.db.is_postgres):
             self.db.query(statement)
+        if self.db.is_postgres:
+            # Supabase serves public-schema tables over its web API; with RLS on and no
+            # policies, only our direct (owner) connection can read or write them.
+            for table in ("products", "price_history", "deals", "kv"):
+                self.db.query(f"ALTER TABLE {table} ENABLE ROW LEVEL SECURITY")
 
     # --- products & prices -------------------------------------------------
 
