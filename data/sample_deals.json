@@ -1,0 +1,43 @@
+[
+  {
+    "title": "SAMPLE Phone 5G (8GB/128GB)",
+    "url": "https://www.amazon.in/dp/B0SAMPLE01?ref=sample&tag=someone-else-21",
+    "category": "Mobiles",
+    "price": 14999,
+    "mrp": 24999,
+    "bank_offer": "Extra ₹1,500 off with HDFC credit cards",
+    "expires_in_hours": 9,
+    "demo_history": {"days": 20, "prices": [18499, 18299, 17999, 18199, 18499, 17999, 18299, 18199]}
+  },
+  {
+    "title": "SAMPLE Wireless Earbuds (40h battery)",
+    "url": "https://www.amazon.in/SAMPLE-Earbuds/dp/B0SAMPLE02/",
+    "category": "Electronics",
+    "price": 1299,
+    "mrp": 4999,
+    "coupon": "SAVE100",
+    "demo_history": {"days": 15, "prices": [1499, 1499, 1449, 1499, 1399, 1499, 1449]}
+  },
+  {
+    "title": "SAMPLE Men's Running Shoes",
+    "url": "https://www.flipkart.com/sample-running-shoes/p/itmsample0001?pid=SHOSAMPLE1",
+    "category": "Fashion",
+    "price": 799,
+    "mrp": 1999
+  },
+  {
+    "title": "SAMPLE Mixer Grinder (inflated MRP trick: should be rejected)",
+    "url": "https://www.amazon.in/dp/B0SAMPLE03",
+    "category": "Home & Kitchen",
+    "price": 2000,
+    "mrp": 4000,
+    "demo_history": {"days": 20, "prices": [2000, 2000, 1999, 2000, 2000, 2050, 2000, 2000]}
+  },
+  {
+    "title": "SAMPLE Small discount (should be rejected)",
+    "url": "https://www.amazon.in/dp/B0SAMPLE04",
+    "category": "Books",
+    "price": 999,
+    "mrp": 1099
+  }
+]

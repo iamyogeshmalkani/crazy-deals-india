@@ -1,0 +1,48 @@
+name: dealbot
+
+on:
+  schedule:
+    - cron: "*/15 * * * *" # GitHub may delay scheduled runs by several minutes
+  workflow_dispatch:
+
+# Only one run at a time: the Telegram update offset and review state are not safe to race.
+concurrency:
+  group: dealbot
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # Steps are skipped (not failed) until the bot token secret exists.
+      CONFIGURED: ${{ secrets.TELEGRAM_BOT_TOKEN != '' }}
+    steps:
+      - name: Not configured yet
+        if: env.CONFIGURED != 'true'
+        run: echo "Add the TELEGRAM_BOT_TOKEN secret (and the others in .env.example) to start the bot."
+      - uses: actions/checkout@v4
+        if: env.CONFIGURED == 'true'
+      - uses: actions/setup-python@v5
+        if: env.CONFIGURED == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+        if: env.CONFIGURED == 'true'
+      - run: python -m dealbot run
+        if: env.CONFIGURED == 'true'
+        env:
+          PYTHONPATH: src
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          TELEGRAM_REVIEW_CHAT_ID: ${{ secrets.TELEGRAM_REVIEW_CHAT_ID }}
+          TELEGRAM_REVIEWER_IDS: ${{ secrets.TELEGRAM_REVIEWER_IDS }}
+          AMAZON_TAG: ${{ secrets.AMAZON_TAG }}
+          FLIPKART_AFFID: ${{ secrets.FLIPKART_AFFID }}
+          FLIPKART_TOKEN: ${{ secrets.FLIPKART_TOKEN }}
+          AFFILIATE_WRAP_JSON: ${{ secrets.AFFILIATE_WRAP_JSON }}
+          RSS_FEEDS: ${{ vars.RSS_FEEDS }}
+          MANUAL_DEALS_FILE: ${{ vars.MANUAL_DEALS_FILE }}
+          MSG_LANG: ${{ vars.MSG_LANG || 'hi' }}

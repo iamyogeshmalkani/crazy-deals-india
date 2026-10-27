@@ -1,0 +1,23 @@
+[project]
+name = "dealbot"
+version = "0.1.0"
+description = "India deals Telegram channel: collect, score, review, publish"
+requires-python = ">=3.9"
+dependencies = [
+  "httpx>=0.27",
+  "psycopg[binary]>=3.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
