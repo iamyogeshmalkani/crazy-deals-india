@@ -46,3 +46,4 @@ jobs:
           RSS_FEEDS: ${{ vars.RSS_FEEDS }}
           MANUAL_DEALS_FILE: ${{ vars.MANUAL_DEALS_FILE }}
           MSG_LANG: ${{ vars.MSG_LANG || 'hi' }}
+          DRY_RUN: ${{ vars.DRY_RUN || '0' }}
